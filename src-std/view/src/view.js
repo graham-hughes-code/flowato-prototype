@@ -16,11 +16,13 @@ export class NodeFrontEnd extends HTMLElement {
   }
 
   attributeChangedCallback(property, oldValue, newValue) {
+    console.log('yes')
     if (oldValue === newValue) return;
     this[property] = newValue;
   }
 
   connectedCallback() {
+    console.log('new');
     const filterFloat = function (value) {
       if(/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
         .test(value))

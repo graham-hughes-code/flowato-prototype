@@ -13,9 +13,14 @@ enum ContextValue {
     N(f64)
 }
 
+#[derive(Serialize, Deserialize)]
+struct Context {
+    pub value: ContextValue
+}
+
 #[derive(Serialize)]
 struct Output {
-    pub context: ContextValue
+    pub context: Context
 }
 
 #[plugin_fn]
@@ -29,7 +34,7 @@ pub fn view(input: String) -> FnResult<Json<Output>> {
         Err(err) => return Err(WithReturnCode::from(err))
     }
 
-    Ok(Json(Output { context: input_data.a }))
+    Ok(Json(Output { context: Context{ value: input_data.a } }))
 }
 
 

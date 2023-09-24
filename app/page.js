@@ -48,7 +48,7 @@ const initialNodes = [];
 
 example.graph.nodes.map((node, i) => {
   initialNodes.push(
-    { id: node.id, type: 'custom', position: { x: node.pos.x, y: node.pos.y }, data: {def: node, Wrapper: wrapWc(`node-${node.name}`)}}
+    { id: node.id, type: 'custom', position: { x: node.pos.x, y: node.pos.y }, data: {def: node}}
   )
 });
 
@@ -77,10 +77,17 @@ export default function App() {
       }
     });
     invoke('run_flow_tauri', {info: JSON.stringify({state: example, triggered_by: node_id})})
-      .then((state) =>{
+      .then((state) => {
+        state = JSON.parse(state);
         setNodes((nds) =>
           nds.map((node) => {
-            node.data = {...node.data, def: {...node.data.def, context: {}}}
+            if (node.id == 'n_asdkslcsfekkesfaf') {
+              const curr_node = state.graph.nodes.find((n) => {return n.id == 'n_asdkslcsfekkesfaf'});
+              const Wrapper = wrapWc(`node-${curr_node.name}`);
+              const handleChange = (e) => {onUpdateContext(e, node.id)};
+              node.data = {...node.data, Wrapper: <Wrapper data={curr_node.context} data_callback={handleChange}></Wrapper>};
+              node.data.Wrapper = <Wrapper data={curr_node.context} data_callback={handleChange}></Wrapper>;
+            }
             return node;
           })
         );
@@ -88,7 +95,11 @@ export default function App() {
       .catch(console.error)
   };
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes.map((n) => { n.data = {...n.data, data_callback: onUpdateContext}; return n; }));
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes.map((n) => {
+    const Wrapper = wrapWc(`node-${n.data.def.name}`);
+    const handleChange = (e) => {onUpdateContext(e, n.id)};
+    n.data = {...n.data, Wrapper: <Wrapper data={n.data.def.context} data_callback={handleChange}></Wrapper>};
+    return n; }));
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
