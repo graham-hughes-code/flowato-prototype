@@ -53,6 +53,11 @@
         "context": null,
         "inlets": [
         {"id": "in_as3943834234234", "name": "a", "type": "string", "required": true}],
+        "outlets": []},
+        {"id": "n_dasfjwerwerwevsf", "name": "view_html", "source": "std/view_html.wasm", "pos": {"x": 900, "y": 500},
+        "context": "<div></div>",
+        "inlets": [
+        {"id": "in_erladkekerwkerkw", "name": "a", "type": "string", "required": true}],
         "outlets": []}
       ],
     "edges": [
